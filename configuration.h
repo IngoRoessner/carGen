@@ -3,6 +3,7 @@
 
 #include <type_traits>
 
+
 template<class... parts>
 class Config{
 public:
@@ -15,6 +16,8 @@ public:
     static constexpr bool containsDerivedPart(){
         return partBaseOf<part, parts...>();
     }
+
+    class PreGenCar: public parts...{};
 
 private:
     template<typename T1>
@@ -34,7 +37,7 @@ private:
 
     template<typename T1, typename T2, typename... Tx>
     static constexpr bool partBaseOf(){
-        return is_base_of<T1, T2>::value ? true : partEquals<T1, Tx...>();
+        return is_base_of<T1, T2>::value ? true : partBaseOf<T1, Tx...>();
     }
 };
 
