@@ -6,15 +6,34 @@ namespace parts{
 
     };
 
-    class Engine{
+    class GasEngine{
+
+    };
+
+    class ElectroEngine{
 
     };
 
     class Transmission{
-
+    public:
+        static constexpr int maxGears = 0;
     };
 
+    class AutomaticTransmissionBase: Transmission{
+    };
 
+    template<int gearCount>
+    class AutomaticTransmission: AutomaticTransmissionBase{
+        static constexpr int maxGears = gearCount;
+    };
+
+    class ManualTransmissionBase: Transmission{
+    };
+
+    template<int gearCount>
+    class ManualTransmission: ManualTransmissionBase{
+        static constexpr int maxGears = gearCount;
+    };
 }
 
 
