@@ -2,6 +2,7 @@
 #define PARTS_H_INCLUDED
 
 #include <iostream>
+#include <type_traits>
 
 namespace parts{
     template<class Generator>
@@ -78,15 +79,21 @@ namespace parts{
     };
 
     namespace AutoPilotHelp{
-        template<class Generator, bool automatic>
-        struct UseClutch{
+        template<class Generator>
+        struct AutomaticClutch{
             static void run(Generator& generator){cout<<"no nead to use a clutch"<<endl;}
         };
 
         template<class Generator>
-        struct UseClutch<Generator, false>{
+        struct ManuelClutch{
             static void run(Generator& generator){generator.clutch();}
         };
+
+        template<class Generator>
+        using UseClutch = typename conditional<Generator::template containsPart<parts::AutomaticTransmission>(),
+                                        AutoPilotHelp::AutomaticClutch<Generator>,
+                                        AutoPilotHelp::ManuelClutch<Generator>>
+                                        ::type;
     }
 
     template<class Generator>
@@ -95,7 +102,7 @@ namespace parts{
         Generator& generator;
 
         void useClutch(){
-            AutoPilotHelp::UseClutch<Generator, Generator::template containsPart<parts::AutomaticTransmission>()>::run(generator);
+            AutoPilotHelp::UseClutch<Generator>::run(generator);
         }
 
     public:
