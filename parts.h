@@ -1,6 +1,8 @@
 #ifndef PARTS_H_INCLUDED
 #define PARTS_H_INCLUDED
 
+#include <iostream>
+
 namespace parts{
     template<class Generator>
     class Body{
@@ -52,6 +54,14 @@ namespace parts{
         Generator& generator;
     public:
         ManuelTransmission(Generator& gen): generator(gen){}
+
+        void clutch(){
+            cout<<"use clutch"<<endl;
+        }
+
+        void switchGear(){
+            cout<<"use clutch"<<endl;
+        }
     };
 
 
@@ -64,6 +74,37 @@ namespace parts{
             static_assert(Generator::template containsPart<parts::Body>(), "a car neads a Body");
             static_assert(Generator::template containsDerivedPart<parts::Engine>(), "a car neads a Engine");
             static_assert(Generator::template containsDerivedPart<parts::Transmission>(), "a car neads a Transmission");
+        };
+    };
+
+    namespace AutoPilotHelp{
+        template<class Generator, bool automatic>
+        struct UseClutch{
+            static void run(Generator& generator){cout<<"no nead to use a clutch"<<endl;}
+        };
+
+        template<class Generator>
+        struct UseClutch<Generator, false>{
+            static void run(Generator& generator){generator.clutch();}
+        };
+    }
+
+    template<class Generator>
+    class AutoPilot{
+    private:
+        Generator& generator;
+
+        void useClutch(){
+            AutoPilotHelp::UseClutch<Generator, Generator::template containsPart<parts::AutomaticTransmission>()>::run(generator);
+        }
+
+    public:
+        AutoPilot(Generator& gen): generator(gen){
+            static_assert(Generator::template containsPart<parts::Body>(), "a car neads a Body");
+            static_assert(Generator::template containsDerivedPart<parts::Engine>(), "a car neads a Engine");
+            static_assert(Generator::template containsDerivedPart<parts::Transmission>(), "a car neads a Transmission");
+
+            useClutch();
         };
     };
 }
