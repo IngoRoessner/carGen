@@ -78,31 +78,30 @@ namespace parts{
         };
     };
 
-    namespace AutoPilotHelp{
-        template<class Generator>
-        struct AutomaticClutch{
-            static void run(Generator& generator){cout<<"no nead to use a clutch"<<endl;}
-        };
-
-        template<class Generator>
-        struct ManuelClutch{
-            static void run(Generator& generator){generator.clutch();}
-        };
-
-        template<class Generator>
-        using UseClutch = typename conditional<Generator::template containsPart<parts::AutomaticTransmission>(),
-                                        AutoPilotHelp::AutomaticClutch<Generator>,
-                                        AutoPilotHelp::ManuelClutch<Generator>>
-                                        ::type;
-    }
 
     template<class Generator>
     class AutoPilot{
     private:
         Generator& generator;
 
+        template<class Gen>
+        struct AutomaticClutch{
+            static void run(Gen& generator){cout<<"no nead to use a clutch"<<endl;}
+        };
+
+        template<class Gen>
+        struct ManuelClutch{
+            static void run(Gen& generator){generator.clutch();}
+        };
+
+        template<class Gen>
+        using UseClutch = typename conditional<Gen::template containsPart<parts::AutomaticTransmission>(),
+                                        AutomaticClutch<Gen>,
+                                        ManuelClutch<Gen>>
+                                        ::type;
+
         void useClutch(){
-            AutoPilotHelp::UseClutch<Generator>::run(generator);
+            UseClutch<Generator>::run(generator);
         }
 
     public:
