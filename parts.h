@@ -73,8 +73,8 @@ namespace parts{
     public:
         CarClassification(Generator& gen): generator(gen){
             static_assert(Generator::template containsPart<parts::Body>(), "a car neads a Body");
-            static_assert(Generator::template containsDerivedPart<parts::Engine>(), "a car neads a Engine");
-            static_assert(Generator::template containsDerivedPart<parts::Transmission>(), "a car neads a Transmission");
+            static_assert(Generator::template containsPart<parts::Engine>(), "a car neads a Engine");
+            static_assert(Generator::template containsPart<parts::Transmission>(), "a car neads a Transmission");
         };
     };
 
@@ -107,8 +107,8 @@ namespace parts{
     public:
         AutoPilot(Generator& gen): generator(gen){
             static_assert(Generator::template containsPart<parts::Body>(), "a car neads a Body");
-            static_assert(Generator::template containsDerivedPart<parts::Engine>(), "a car neads a Engine");
-            static_assert(Generator::template containsDerivedPart<parts::Transmission>(), "a car neads a Transmission");
+            static_assert(Generator::template containsPart<parts::Engine>(), "a car neads a Engine");
+            static_assert(Generator::template containsPart<parts::Transmission>(), "a car neads a Transmission");
 
             useClutch();
         };

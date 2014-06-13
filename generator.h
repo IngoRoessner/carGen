@@ -12,7 +12,7 @@ public:
     }
 
     template<class part>
-    static constexpr bool containsDerivedPart(){
+    static constexpr bool containsPart(){
         return partBaseOf<part, Mixins...>();
     }
 
@@ -25,7 +25,7 @@ private:
 
     template<template<class> class T1, template<class> class T2, template<class> class... Tx>
     static constexpr bool partEquals(){
-        return is_same<T1<Generator<Mixins...>>, T2<Generator<Mixins...>>>::value ? true : partEquals<T1, Tx...>();
+        return is_base_of<T1<Generator<Mixins...>>, T2<Generator<Mixins...>>>::value ? true : partEquals<T1, Tx...>();
     }
 
     template<typename T1>
