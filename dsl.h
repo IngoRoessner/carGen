@@ -6,6 +6,7 @@
 #include <type_traits>
 
 class EcoLine{};
+class StrictEcoLine{};
 
 struct EndElement{};
 
@@ -25,6 +26,19 @@ template<class... DSLClasses>
 struct DSL<EcoLine, DSLClasses...>{
     template<template<class>class... Parts>
     using Gen = typename DSL<DSLClasses...>::template Gen<Parts..., parts::ElectroEngine>;
+};
+
+
+template<class... DSLClasses>
+struct DSL<StrictEcoLine, DSLClasses...>{
+    template<template<class>class... Parts>
+    struct DefParts{
+        using Gen2 = typename DSL<DSLClasses...>::template Gen<Parts..., parts::ElectroEngine>;
+        static_assert(!(Gen2::template containsPart<parts::GasEngine>()), "Gas is not Eco");
+    };
+
+    template<template<class>class... Parts>
+    using Gen = typename DefParts<Parts...>::Gen2;
 };
 
 
