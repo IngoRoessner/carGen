@@ -11,25 +11,20 @@ struct EndElement{};
 
 template<class DSLClass = EndElement, class... DSLClasses>
 struct DSL{
-    static_assert(true, "unknown DSLClass handling");
+    //should be false every time, but only evaluated if the this Template is instantiated
+    static_assert(is_same<DSLClass, bool>::value, "Unknown DSLClass handling. The is no DSL specialization for given class");
 };
 
 template<>
 struct DSL<EndElement>{
     template<template<class>class... Parts>
-    struct DefineParts{
-        using  Result = Generator<Parts...>;
-    };
+    using Gen = Generator<Parts...>;
 };
 
 template<class... DSLClasses>
 struct DSL<EcoLine, DSLClasses...>{
     template<template<class>class... Parts>
-    struct DefineParts{
-        using  Result = typename DSL<DSLClasses...>::template DefineParts<Parts..., parts::ElectroEngine>::Result;
-    };
-
-    using Gen = typename DefineParts<>::Result;
+    using Gen = typename DSL<DSLClasses...>::template Gen<Parts..., parts::ElectroEngine>;
 };
 
 
