@@ -1,6 +1,8 @@
 #ifndef GENERATOR_H_INCLUDED
 #define GENERATOR_H_INCLUDED
 
+#include "configuration.h"
+
 template<template<class> class... Mixins>
 class Generator:public Mixins<Generator<Mixins...>>...{
 public:
@@ -8,34 +10,12 @@ public:
 
     template<template<class> class part>
     static constexpr bool containsPart(){
-        return partTemplateBaseOf<part, Mixins...>();
+        return Config<Mixins...>::template containsPart<part>();
     }
 
     template<class part>
     static constexpr bool containsPart(){
-        return partClassBaseOf<part, Mixins...>();
-    }
-
-private:
-
-    template<template<class> class T1>
-    static constexpr bool partTemplateBaseOf(){
-        return false;
-    }
-
-    template<template<class> class T1, template<class> class T2, template<class> class... Tx>
-    static constexpr bool partTemplateBaseOf(){
-        return is_base_of<T1<Generator<Mixins...>>, T2<Generator<Mixins...>>>::value ? true : partTemplateBaseOf<T1, Tx...>();
-    }
-
-    template<typename T1>
-    static constexpr bool partClassBaseOf(){
-        return false;
-    }
-
-    template<typename T1, template<class> class T2, template<class> class... Tx>
-    static constexpr bool partClassBaseOf(){
-        return is_base_of<T1, T2<Generator<Mixins...>>>::value ? true : partClassBaseOf<T1, Tx...>();
+        return Config<Mixins...>::template containsPart<part>();
     }
 };
 
