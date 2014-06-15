@@ -4,24 +4,24 @@
 #include "generator.h"
 #include "parts.h"
 #include <type_traits>
+#include "dsl_partreduce.h"
 
-class EcoLine{};
-class StrictEcoLine{};
+struct DSLEndElement{};
 
-struct EndElement{};
-
-template<class DSLClass = EndElement, class... DSLClasses>
+template<class DSLClass = DSLEndElement, class... DSLClasses>
 struct DSL{
     //should be false every time, but only evaluated if the this Template is instantiated
     static_assert(is_same<DSLClass, bool>::value, "Unknown DSLClass handling. The is no DSL specialization for given class");
 };
 
 template<>
-struct DSL<EndElement>{
+struct DSL<DSLEndElement>{
     template<template<class>class... Parts>
-    using Gen = Generator<Parts...>;
+    using Gen = typename Reduce<Parts...>::Gen;
 };
 
+
+class EcoLine{};
 template<class... DSLClasses>
 struct DSL<EcoLine, DSLClasses...>{
     template<template<class>class... Parts>
@@ -29,6 +29,7 @@ struct DSL<EcoLine, DSLClasses...>{
 };
 
 
+class StrictEcoLine{};
 template<class... DSLClasses>
 struct DSL<StrictEcoLine, DSLClasses...>{
     template<template<class>class... Parts>
