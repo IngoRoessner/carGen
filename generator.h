@@ -1,6 +1,7 @@
 #ifndef GENERATOR_H_INCLUDED
 #define GENERATOR_H_INCLUDED
 
+#include "docu.h"
 #include "configuration.h"
 
 template<template<class> class... Mixins>
@@ -17,6 +18,8 @@ public:
     static constexpr bool containsPart(){
         return Config<Mixins...>::template containsPart<part>();
     }
+
+    using Docu = Documentation<Mixins...>;
 };
 
 #endif // GENERATOR_H_INCLUDED
