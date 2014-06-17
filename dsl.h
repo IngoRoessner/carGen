@@ -6,6 +6,13 @@
 #include <type_traits>
 #include "dsl_partreduce.h"
 
+#define CreateDSLClass(dslClass, additionalParts...) class dslClass{};\
+template<class... DSLClasses>\
+struct DSL<dslClass, DSLClasses...>{\
+    template<template<class>class... Parts>\
+    using Gen = typename DSL<DSLClasses...>::template Gen<Parts..., additionalParts>; \
+};
+
 struct DSLEndElement{};
 
 template<class DSLClass = DSLEndElement, class... DSLClasses>
@@ -42,6 +49,6 @@ struct DSL<StrictEcoLine, DSLClasses...>{
     using Gen = typename DefParts<Parts...>::Gen2;
 };
 
-
+CreateDSLClass(WoodenLine, parts::GasEngine, parts::ManuelTransmission)
 
 #endif // DSL_H_INCLUDED
