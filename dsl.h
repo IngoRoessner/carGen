@@ -51,4 +51,6 @@ struct DSL<StrictEcoLine, DSLClasses...>{
 
 CreateDSLClass(WoodenLine, parts::GasEngine, parts::ManuelTransmission)
 
+CreateDSLClass(GoogleCar, parts::AutoPilot, parts::ElectroEngine, parts::AutomaticTransmission)
+
 #endif // DSL_H_INCLUDED

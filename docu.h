@@ -8,6 +8,19 @@
 #include <tuple>
 #include "configuration.h"
 
+
+#define CreateDocuClass(part, content...) template<>\
+class DocuElement<part>{\
+public:\
+    static string getSegmentName(){\
+        return #part;\
+    }\
+    static string getSegmentContent(){\
+        return #content;\
+    }\
+};
+
+
 class Dummy{};
 
 template<template<class> class Part>
@@ -37,6 +50,10 @@ public:
         return "a engine driven by electric.";
     }
 };
+
+CreateDocuClass(parts::AutoPilot,
+                ein autopilot, der dynamisch auf transmission reagiert
+                aber bla)
 
 //end custom DocuElements
 
