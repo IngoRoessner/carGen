@@ -53,7 +53,7 @@ public:
 
 CreateDocuClass(parts::AutoPilot,
                 ein autopilot, der dynamisch auf transmission reagiert
-                aber bla)
+                aber bla \nzeilenumbruch)
 
 //end custom DocuElements
 
