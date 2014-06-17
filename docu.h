@@ -6,6 +6,7 @@
 #include <iostream>
 #include <typeinfo>
 #include <tuple>
+#include "configuration.h"
 
 class Dummy{};
 
@@ -59,6 +60,16 @@ public:
             result = result + "\n";
         }
         return result;
+    }
+
+    template<template<class> class part>
+    static constexpr bool containsPart(){
+        return Config<Parts...>::template containsPart<part>();
+    }
+
+    template<class part>
+    static constexpr bool containsPart(){
+        return Config<Parts...>::template containsPart<part>();
     }
 };
 

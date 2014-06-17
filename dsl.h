@@ -9,8 +9,8 @@
 #define CreateDSLClass(dslClass, additionalParts...) class dslClass{};\
 template<class... DSLClasses>\
 struct DSL<dslClass, DSLClasses...>{\
-    template<template<class>class... Parts>\
-    using Gen = typename DSL<DSLClasses...>::template Gen<Parts..., additionalParts>; \
+    template<template<template<class>class...>class PartsFor = Generator,template<class>class... Parts>\
+    using Gen = typename DSL<DSLClasses...>::template Gen<PartsFor, Parts..., additionalParts>; \
 };
 
 struct DSLEndElement{};
@@ -23,30 +23,30 @@ struct DSL{
 
 template<>
 struct DSL<DSLEndElement>{
-    template<template<class>class... Parts>
-    using Gen = typename Reduce<Parts...>::Gen;
+    template<template<template<class>class...>class PartsFor = Generator, template<class>class... Parts>
+    using Gen = typename Reduce<PartsFor, Parts...>::Gen;
 };
 
 
 class EcoLine{};
 template<class... DSLClasses>
 struct DSL<EcoLine, DSLClasses...>{
-    template<template<class>class... Parts>
-    using Gen = typename DSL<DSLClasses...>::template Gen<Parts..., parts::ElectroEngine>;
+    template<template<template<class>class...>class PartsFor = Generator,template<class>class... Parts>
+    using Gen = typename DSL<DSLClasses...>::template Gen<PartsFor, Parts..., parts::ElectroEngine>;
 };
 
 
 class StrictEcoLine{};
 template<class... DSLClasses>
 struct DSL<StrictEcoLine, DSLClasses...>{
-    template<template<class>class... Parts>
+    template<template<template<class>class...>class PartsFor = Generator,template<class>class... Parts>
     struct DefParts{
-        using Gen2 = typename DSL<DSLClasses...>::template Gen<Parts..., parts::ElectroEngine>;
+        using Gen2 = typename DSL<DSLClasses...>::template Gen<PartsFor, Parts..., parts::ElectroEngine>;
         static_assert(!(Gen2::template containsPart<parts::GasEngine>()), "Gas is not Eco");
     };
 
-    template<template<class>class... Parts>
-    using Gen = typename DefParts<Parts...>::Gen2;
+    template<template<template<class>class...>class PartsFor = Generator,template<class>class... Parts>
+    using Gen = typename DefParts<PartsFor, Parts...>::Gen2;
 };
 
 CreateDSLClass(WoodenLine, parts::GasEngine, parts::ManuelTransmission)

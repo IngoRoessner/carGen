@@ -18,8 +18,6 @@ public:
     static constexpr bool containsPart(){
         return Config<Mixins...>::template containsPart<part>();
     }
-
-    using Docu = Documentation<Mixins...>;
 };
 
 #endif // GENERATOR_H_INCLUDED
